@@ -6,6 +6,7 @@ PS1='\033[1;32m\w/\033[0;0m '
 
 #Exports 
 export PATH="$HOME/.local/bin/:$PATH"
+export PATH="$HOME/.cargo/bin/:$PATH"
 
 # Aliases
 alias ls='ls --color=auto -t'
@@ -22,3 +23,8 @@ alias mv='printf "\033[1;34m" && mv -v'
 alias mkdir='printf "\033[1;33m" && mkdir -v'
 alias rmdir='printf "\033[1;35m" && rmdir -v'
 export PATH="$PATH:$HOME/.spicetify"
+
+export PATH="$PATH:/home/kara/.local/bin"
+
+unset GDK_PIXBUF_MODULEDIR
+unset GDK_PIXBUF_MODULE_FILE

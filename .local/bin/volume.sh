@@ -10,11 +10,11 @@
 # https://gist.github.com/sebastiencs/5d7227f388d93374cebdf72e783fbd6a
 
 function get_volume {
-  amixer get Master | grep '%' | head -n 1 | cut -d '[' -f 2 | cut -d '%' -f 1
+  pamixer --get-volume-human | cut -d '%' -f 1
 }
 
 function is_mute {
-  amixer get Master | grep '%' | grep -oE '[^ ]+$' | grep off > /dev/null
+  pamixer --get-volume-human | grep 'muted' > /dev/null
 }
 
 function send_notification {
@@ -32,20 +32,17 @@ function send_notification {
 
 case $1 in
   up)
-    # set the volume on (if it was muted)
-    amixer -D pulse set Master on > /dev/null
     # up the volume (+ 5%)
-    amixer -D pulse sset Master 5%+ > /dev/null
+    pamixer --increase 5 > /dev/null
     send_notification
     ;;
   down)
-    amixer -D pulse set Master on > /dev/null
-    amixer -D pulse sset Master 5%- > /dev/null
+    pamixer --decrease 5 > /dev/null
     send_notification
     ;;
   mute)
     # toggle mute
-    amixer -D pulse set Master 1+ toggle > /dev/null
+    pamixer --toogle-mute > /dev/null
     send_notification
     ;;
 esac

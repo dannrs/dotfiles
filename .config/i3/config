@@ -3,7 +3,7 @@ set $mod Mod4
 set $alt Mod1
 
 #Settings
-font pango:Fira Code 10
+font pango:SF Pro Display 10
 gaps inner 10
 smart_gaps on
 smart_gaps inverse_outer
@@ -17,11 +17,14 @@ default_border none
 # Auto Start
 exec_always --no-startup-id autotiling
 exec_always picom --backend glx --vsync
-exec_always --no-startup-id redshift -x && redshift -O 4000k
+#exec_always --no-startup-id redshift -x && redshift -O 4000k
 exec_always --no-startup-id killall dunst; dunst
 exec_always --no-startup-id feh --bg-fill -r -z $HOME/Pictures/Wallpapers
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+exec_always --no-startup-id $HOME/.local/bin/suspend
+exec --no-startup-id /usr/bin/lxpolkit &
+exec --no-startup-id pipewire &
+exec --no-startup-id pipewire-pulse &
 
 #Apps
 bindsym $mod+Return exec kitty
@@ -42,20 +45,22 @@ bindsym XF86MonBrightnessUp exec --no-startup-id sh $HOME/.local/bin/brightness.
 bindsym XF86MonBrightnessDown exec --no-startup-id sh $HOME/.local/bin/brightness.sh down
 
 #Power Management
-exec_always --no-startup-id sh $HOME/.local/bin/suspend.sh
 
 #Window Management
 bindsym $mod+q kill
 floating_modifier $mod
-bindsym $alt+Tab focus next
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 bindsym $mod+space fullscreen toggle
 bindsym $mod+Tab floating toggle
-bindsym $mod+h split h
-bindsym $mod+v split v
+bindsym $mod+Shift+h split h
+bindsym $mod+Shift+v split v
 
 #workspaces
 set $ws1 "1"
@@ -86,5 +91,5 @@ bindsym $mod+Shift+l exec sh $HOME/.local/bin/lock
 bindsym $mod+Shift+e exit
 
 #Rules
-for_window[class="feh"] floating toggle
-for_window[class="sxiv"] floating toggle
+for_window [class="feh"] floating toggle
+for_window [class="sxiv"] floating toggle

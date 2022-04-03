@@ -3,11 +3,9 @@ PS1="%F{green}%B%~/%b%f "
 
 #Exports 
 export PATH="$HOME/.local/bin/:$PATH"
-
-#Spotifetch
-export SPOTIPY_CLIENT_ID='591018639cc34acfb3899ff38a98376a'
-export SPOTIPY_CLIENT_SECRET='fac978f6221c49b1a24b098f01344838'
-export SPOTIPY_REDIRECT_URI='http://127.0.0.1:9090'
+export PATH="$PATH:$HOME/.spicetify"
+#export PATH="$PATH:$HOME/.local/bin"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # Aliases
 alias ls='ls --color=auto -t'
@@ -47,5 +45,3 @@ bindkey "^A" beginning-of-line
 bindkey "^Q" end-of-line
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
-
-export PATH="$PATH:$HOME/.spicetify"

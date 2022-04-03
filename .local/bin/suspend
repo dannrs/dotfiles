@@ -1,0 +1,3 @@
+#!/bin/sh
+
+$HOME/.cargo/bin/xidlehook --detect-sleep --not-when-fullscreen --not-when-audio --timer 240 'xset dpms force off' '' --timer 300 '$HOME/.local/bin/lock' '' --timer 1200 'loginctl suspend' '' &
