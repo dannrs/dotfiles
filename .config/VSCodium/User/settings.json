@@ -1,13 +1,10 @@
 {
-    "workbench.startupEditor": "none",
     "workbench.colorTheme": "Paradise",
     "window.menuBarVisibility": "toggle",
-    "workbench.statusBar.visible": false,
     "editor.fontSize": 16,
     "editor.fontFamily": "'JetBrains Mono', 'monospace', monospace",
     "editor.lineHeight": 1.6,
     "editor.fontLigatures": true,
-    "workbench.activityBar.visible": false,
     "breadcrumbs.enabled": false,
     "editor.tabSize": 2,
     "editor.rulers": [
@@ -16,5 +13,9 @@
     "editor.wordWrap": "on",
     "editor.cursorBlinking": "phase",
     "editor.cursorSmoothCaretAnimation": true,
-    "editor.smoothScrolling": true
+    "editor.smoothScrolling": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "none",
+    "workbench.statusBar.visible": false,
+    "workbench.activityBar.visible": false
 }
