@@ -4,7 +4,6 @@ PS1="%F{green}%B%~/%b%f "
 #Exports 
 export PATH="$HOME/.local/bin/:$PATH"
 export PATH="$PATH:$HOME/.spicetify"
-#export PATH="$PATH:$HOME/.local/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Aliases
