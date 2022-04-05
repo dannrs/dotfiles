@@ -16,6 +16,12 @@
     "editor.smoothScrolling": true,
     "workbench.iconTheme": "material-icon-theme",
     "workbench.startupEditor": "none",
-    "workbench.statusBar.visible": false,
-    "workbench.activityBar.visible": false
+    "workbench.activityBar.visible": false,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1500,
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "workbench.editor.showTabs": false,
+    "workbench.editor.showIcons": false,
+    "workbench.statusBar.visible": false
 }
