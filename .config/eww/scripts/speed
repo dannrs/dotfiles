@@ -1,0 +1,26 @@
+#!/bin/bash
+INTERFACE=enp2s0
+
+while :
+do
+  # Mendapatkan statistik kecepatan unduh dan unggah dari /proc/net/dev
+  stats_before=$(grep $INTERFACE /proc/net/dev)
+  sleep 1
+  stats_after=$(grep $INTERFACE /proc/net/dev)
+
+  # Mendapatkan nilai unduh dan unggah dari statistik sebelum dan sesudah
+  rx_before=$(echo "$stats_before" | awk '{print $2}')
+  rx_after=$(echo "$stats_after" | awk '{print $2}')
+  tx_before=$(echo "$stats_before" | awk '{print $10}')
+  tx_after=$(echo "$stats_after" | awk '{print $10}')
+
+  # Menghitung kecepatan unduh dan unggah dalam KB/s
+  download_speed=$((($rx_after - $rx_before) / 1024))
+  upload_speed=$((($tx_after - $tx_before) / 1024))
+
+  # Menampilkan kecepatan unduh dan unggah dalam format yang diinginkan
+  echo "D: $download_speed KB/s U: $upload_speed KB/s"
+
+  # Memberikan jeda sebelum memperbarui kembali nilai
+  sleep 1
+done

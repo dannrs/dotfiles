@@ -1,0 +1,142 @@
+(defpoll clock :interval "5s" "date +\%H:%M")
+(defpoll clock_date :interval "10h" "date '+%a, %b %d'")
+(defpoll bat_icon :interval "1m" `scripts/battery --icon`)
+(defpoll bat_perc :interval "1m" `scripts/battery --perc`)
+(defpoll vol_icon :interval "1s" `scripts/volume --icon`)
+(defpoll vol_perc :interval "1s" `scripts/volume --perc`)
+(defpoll wifi_icon :interval "30s" `scripts/wifi --icon`)
+(defpoll wifi_essid :interval "30s" `scripts/wifi --text`)
+(defpoll brightness_percent :interval "5s" `scripts/brightness`)
+
+(defvar time_reveal false)
+(defvar bat_reveal false)
+(defvar br_reveal false)
+(defvar vol_reveal false)
+(defvar wifi_reveal false)
+
+(deflisten window_name "scripts/xwindow")
+(deflisten workspace "scripts/workspace")
+
+(defvar eww "$HOME/.local/bin/eww -c $HOME/.config/eww")
+
+(defwidget left []
+	(box :orientation "h" 
+		 :space-evenly false  
+         :halign "start"
+		 :class "left_modules"
+(workspaces)))
+
+(defwidget center []
+	(box :orientation "h" 
+		 :space-evenly false  
+         :halign "center"
+		 :class "center_modules"
+(xwindow)))
+
+(defwidget right []
+	(box :orientation "h" 
+		 :space-evenly false  
+         :halign "end"
+		 :class "right_modules"
+(wifi)
+(brightness)
+(volume)
+(battery)
+(time)))
+
+(defwidget bar []
+  (centerbox :orientation "h"
+    (left)
+    (center)
+    (right)))
+
+(defwidget workspaces []
+  (literal :content workspace))
+
+(defwidget battery []
+  (eventbox :onhover "${eww} update bat_reveal=true"
+			  :onhoverlost "${eww} update bat_reveal=false"
+    (box :class "module" :space-evenly "false" :orientation "h" :spacing "5" 
+      (label :text bat_icon :class "bat_icon" )
+	  (revealer :transition "slideleft"
+			  :reveal bat_reveal
+			  :duration "350ms"
+      (button :class "labeltext"
+        bat_perc
+        )
+  ))))
+
+(defwidget brightness []
+  (eventbox :onhover "${eww} update br_reveal=true"
+			  :onhoverlost "${eww} update br_reveal=false"
+    (box :class "module-2" :space-evenly "false" :orientation "h" :spacing "5" 
+      (label :text "󰃠" :class "bright_icon" :tooltip "Brightness")
+	  (revealer :transition "slideright"
+			  :reveal br_reveal
+			  :duration "350ms"
+    (scale :class "brightbar"
+			  :value brightness_percent
+			  :orientation "h"
+			  :tooltip "${brightness_percent}%"
+			  :max 100
+			  :min 0
+			  :onchange "brightnessctl set {}%")
+    )
+  )))
+
+(defwidget volume []
+  (eventbox :onhover "${eww} update vol_reveal=true"
+			  :onhoverlost "${eww} update vol_reveal=false"
+  (box :class "module-2" :space-evenly "false" :orientation "h" :spacing "5" 
+	  (button :onclick "pamixer -t" :class "volume_icon" vol_icon)
+	(revealer :transition "slideleft"
+			  :reveal vol_reveal
+			  :duration "350ms"
+	(scale :class "volbar"
+			  :value vol_perc
+			  :orientation "h"
+			  :tooltip "${vol_perc}%"
+			  :max 100
+			  :min 0
+			  :onchange "pamixer --set-volume {}" )))))
+
+(defwidget wifi [] 
+  (eventbox :onhover "${eww} update wifi_reveal=true"
+			  :onhoverlost "${eww} update wifi_reveal=false"
+		(box :vexpand "false" :hexpand "false" :space-evenly "false" :spacing "5"
+				(button :class "module-wifi" :onclick "rofi-wifi-menu.sh" :wrap "false" :limit-width 12 wifi_icon)
+	(revealer :transition "slideleft"
+			  :reveal wifi_reveal
+			  :duration "350ms"
+	(label :class "wifi_essid"
+			  :text wifi_essid
+			  :orientation "h"
+			  )))))
+
+(defwidget time []
+  (eventbox :onhover "${eww} update time_reveal=true"
+			  :onhoverlost "${eww} update time_reveal=false"
+    (box :class "module" :space-evenly "false" :orientation "h" :spacing "2" 
+      (label :text clock :class "clock_class" )
+	  (revealer :transition "slideleft"
+			  :reveal time_reveal
+			  :duration "350ms"
+      (button :class "clock_date_class"
+          clock_date
+    )
+  ))))
+
+(defwidget xwindow []
+  (literal :content window_name)
+)
+
+(defwindow bar
+  :monitor 0
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "28px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "4%")
+  (bar))

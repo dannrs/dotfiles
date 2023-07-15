@@ -1,0 +1,33 @@
+#!/bin/bash
+
+STATUS=$(nmcli networking connectivity)
+CONNECTION_TYPE=$(nmcli -t -f TYPE connection show --active)
+LAN_DEVICE="enp2s0"
+
+if [[ $STATUS == "limited" || $STATUS == "none" ]]; then
+  icon="󰤭"
+  text="Offline"
+else
+  if [[ $CONNECTION_TYPE == *"ethernet"* ]]; then
+    connected_device=$(nmcli -t -f DEVICE connection show --active | grep "$LAN_DEVICE")
+    if [[ $connected_device ]]; then
+      icon="󰌗"
+      text="LAN"
+    fi
+  elif [[ $CONNECTION_TYPE == *"wireless"* ]]; then
+    ESSID=$(nmcli -t -f NAME connection show --active)
+    if [[ $ESSID ]]; then
+      icon="󰤨"
+      text="$ESSID"
+    fi
+  else
+    icon=""
+    text="Unknown"
+  fi
+fi
+
+if [[ "$1" == "--icon" ]]; then
+  echo "$icon"
+elif [[ "$1" == "--text" ]]; then
+  echo "$text"
+fi

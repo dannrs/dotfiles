@@ -1,0 +1,51 @@
+#!/bin/bash
+INTERFACE=enp2s0
+
+# Menghapus input buffer dan menampilkan teks kecepatan pertama kali
+printf "\rD: 0 KB/s U: 0 KB/s"
+
+while :
+do
+  # Mendapatkan statistik kecepatan unduh dan unggah dari /proc/net/dev
+  stats_before=$(grep $INTERFACE /proc/net/dev)
+  sleep 1
+  stats_after=$(grep $INTERFACE /proc/net/dev)
+
+  # Mendapatkan nilai unduh dan unggah dari statistik sebelum dan sesudah
+  rx_before=$(echo "$stats_before" | awk '{print $2}')
+  rx_after=$(echo "$stats_after" | awk '{print $2}')
+  tx_before=$(echo "$stats_before" | awk '{print $10}')
+  tx_after=$(echo "$stats_after" | awk '{print $10}')
+
+  # Menghitung kecepatan unduh dan unggah dalam KB/s
+  download_speed=$((($rx_after - $rx_before) / 1024))
+  upload_speed=$((($tx_after - $tx_before) / 1024))
+
+  # Menyesuaikan kecepatan menjadi MB/s jika melebihi 1024 KB/s
+  if [ $download_speed -gt 1024 ]; then
+    download_speed=$(awk "BEGIN {printf \"%.2f\", $download_speed / 1024}")
+    download_unit="MB/s"
+  else
+    download_unit="KB/s"
+  fi
+
+  if [ $upload_speed -gt 1024 ]; then
+    upload_speed=$(awk "BEGIN {printf \"%.2f\", $upload_speed / 1024}")
+    upload_unit="MB/s"
+  else
+    upload_unit="KB/s"
+  fi
+
+  # Menyimpan posisi kursor saat ini
+  tput sc
+
+  # Mengatur kursor pada kolom pertama
+  tput cuf 0
+
+  # Menghapus baris sebelumnya dan menampilkan teks kecepatan terbaru
+  printf "\rD: %s %s U: %s %s" "$download_speed" "$download_unit" "$upload_speed" "$upload_unit"
+
+  # Mengembalikan posisi kursor ke posisi awal
+  tput rc
+
+done

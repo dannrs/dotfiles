@@ -1,0 +1,37 @@
+#!/bin/bash
+
+contains() {
+  for e in $1; do
+    [ "$e" == "$2" ] && echo 1 && return
+  done
+  echo 0
+}
+
+print_workspaces() {
+  buf=""
+  focused_workspace=$(i3-msg -t get_workspaces | jq -r '.[] | select(.focused==true).name')
+  occupied_workspaces=$(i3-msg -t get_workspaces | jq -r '.[] | select(.visible==false and .focused==false).name')
+
+  for i in {1..6}; do
+    if [ "$(contains "$focused_workspace" "$i")" -eq 1 ]; then
+      icon="󰐾"
+      class="workspace_active"
+    elif [ "$(contains "$occupied_workspaces" "$i")" -eq 1 ]; then
+      icon=""
+      class="workspace_occupied"
+    else
+      icon="󰐽"
+      class="workspace_empty"
+    fi
+
+    
+buf="$buf (eventbox :cursor \"pointer\" (button :class \"$class\" :onclick \"i3-msg workspace $i\" \"$icon\"))"
+  done
+
+  echo "(box :orientation \"h\" :class \"works\" :spacing 3 :space-evenly \"false\" $buf)"
+}
+
+print_workspaces
+i3-msg -t subscribe -m '["workspace"]' | while read -r _ ; do
+  print_workspaces
+done

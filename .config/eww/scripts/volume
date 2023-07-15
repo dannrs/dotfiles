@@ -1,0 +1,24 @@
+#!/bin/bash
+
+VOLUME=`pamixer --get-volume`
+STATUS=`pamixer --get-volume-human`
+
+battery_icon() {
+  if [[ ($STATUS == *"muted"*) || ($VOLUME == 0) ]]; then
+    echo "󰖁"
+  else
+		if [[ ($VOLUME -lt 100) && (($VOLUME -gt 65) || ($VOLUME -eq 65)) ]]; then
+			echo "󰕾"
+		elif [[ ($VOLUME -lt 65) && (($VOLUME -gt 30) || ($VOLUME -eq 30)) ]]; then
+			echo "󰖀"
+		elif [[ ($VOLUME -lt 30) && (($VOLUME -gt 10) || ($VOLUME -eq 10)) ]]; then
+			echo "󰕿"
+		fi
+	fi
+}
+
+if [[ $1 == '--icon' ]]; then
+  battery_icon
+elif [[ $1 == '--perc' ]]; then
+	echo "${VOLUME}"
+fi

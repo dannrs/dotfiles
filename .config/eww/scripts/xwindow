@@ -1,0 +1,42 @@
+#!/bin/bash
+
+get_window_name() {
+  WIN_NAME="$(xdotool getwindowfocus getwindowname)"
+
+  if [[ "$WIN_NAME" == "i3" ]]; then
+    echo "(label :class \"text_empty\" \"\")"
+  else
+    echo "(box :halign \"center\" :class \"window\" (label :class \"text\" :limit-width 30 :text \"$WIN_NAME\"))"
+  fi
+}
+
+get_workspace_status() {
+  WORKSPACES=$(i3-msg -t get_workspaces)
+
+  if [[ "$WORKSPACES" == "[]" ]]; then
+    echo "empty"
+  else
+    echo "not_empty"
+  fi
+}
+
+workspace_empty=false
+last_window=""
+
+i3-msg -t subscribe -m '["window", "output", "workspace"]' | while read -r line ; do
+  event=$(echo "$line" | jq -r '.change')
+  
+  if [[ "$event" == "focus" ]]; then
+    workspace_status=$(get_workspace_status)
+
+    if [[ "$workspace_status" == "empty" ]]; then
+      if [[ "$workspace_empty" == false ]]; then
+        workspace_empty=true
+        echo "(label :class \"text_empty\" :text \"\")"
+      fi
+    else
+      workspace_empty=false
+      get_window_name
+    fi
+  fi
+done
